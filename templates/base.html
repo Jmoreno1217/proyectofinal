@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head  %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+        {% endblock %}
+    </head>
+    
+    <body>
+        <header class="encabezado">
+            <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
+            <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
+            <h1 class="encabezado">Veterinaria: no se que nombre</h1>
+            <marquee class="marquesinaE"><h3>ejemplo de eslogan</h3></marquee>
+        </header>
+
+        <footer class="Pie">
+
+        </footer>
+    </body>
+</html>
