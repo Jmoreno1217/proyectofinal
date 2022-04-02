@@ -14,12 +14,21 @@
         <header class="encabezado">
             <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
             <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
-            <h1 class="encabezado">Veterinaria: no se que nombre</h1>
-            <marquee class="marquesinaE"><h3>ejemplo de eslogan</h3></marquee>
+            <h1 class="encabezado">Veterinaria Pet Lovers</h1>
+            <marquee class="marquesinaE"><h3>Patitas sanas y felices ♥</h3></marquee>
         </header>
-
-        <footer class="Pie">
-
+        <nav class="navegacion">
+            {% block nav %}
+            {% endblock %}
+        </nav>
+        <div class="cuerpo">
+            {% block body %}
+            {% endblock %}
+        </div>
+        <footer class="pie">
+            {% block footer %}
+            <p>Copyright Pet Lovers® 2022. Todos los derechos reservados.</p>
+            {% endblock %}
         </footer>
     </body>
 </html>

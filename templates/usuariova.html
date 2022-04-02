@@ -1,0 +1,17 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Usuario {{usuario['usuario']}}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<ul>
+    <li><a href="/">Pagina de Inicio.</a></li>
+    <li><a href="/usuarios">Atras.</a></li>
+</ul>
+{% endblock %}
+{% block body %}
+<p><strong>Nombre: </strong> {{usuario['nombreCompleto']}}</p>
+<p><strong>Correo: </strong> {{usuario['correo']}}</p>
+<p><strong>Tipo: </strong> {{usuario['tipo']}}</p>
+{% endblock %}

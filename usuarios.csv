@@ -1,0 +1,7 @@
+id,usuario,nombreCompleto,password,correo,tipo
+
+1,ejemplo,ejemplo,1234,1234@nose.com,administrador
+
+2,ejemplo2,ejemplo2,1234,12344@nose.com,usuario
+
+3,ejemplo3,ejemplo3,1234,12345@nose.com,cliente

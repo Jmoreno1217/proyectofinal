@@ -1,0 +1,21 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Inicio
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<ul>
+    {%if log == 1%}
+    <li><a href="/logout">Cerrar sesión.</a></li>
+    {%else%}
+    <li><a href="/login">Iniciar sesión.</a></li>
+    {%endif%}
+    {%if tipo=="administrador"%}
+    <li><a href="/usuarios">Usuarios.</a></li>
+    {%endif%}
+</ul>
+{% endblock %}
+{% block body %}
+algo
+{% endblock %}

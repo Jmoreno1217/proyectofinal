@@ -5,6 +5,14 @@ header.encabezado{
     border: 3px solid green;
     
 }
+footer.pie{
+    width: 100%;
+    border: 3px solid pink;
+}
+nav {
+    width: 100%;
+    border: 3px solid red;
+}
 h1.encabezado{
     font-family: 'Josefin Sans', sans-serif;
     font-size: 2.5em;
@@ -22,10 +30,8 @@ header>marquee>h3{
     size:2em;
     font-family:'Lobster', sans-serif;
 }
-header > div{
-    display: block;
-    border: 3px solid green;
-    height: 12rem;
+div.cuerpo{
+    border: 3px solid yellow;
 }
 /* latin-ext */
 @font-face {
