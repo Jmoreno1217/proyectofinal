@@ -1,0 +1,35 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Usuarios
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h2>Servicios:</h2>
+<ul>
+    <li><h3>Citas</h3></li>
+    <ul>
+    {% for servicio in servicios %}
+    {%if servicios[servicio]['tipo']=='cita'%}
+    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    {%endif%}
+    {% endfor %}
+    <li><h3>Recetas</h3></li>
+    <ul>
+    {% for servicio in servicios %}
+    {%if servicios[servicio]['tipo']=='receta'%}
+    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    {%endif%}
+    {% endfor %}
+    <li><h3>Atención</h3></li>
+    <ul>
+    {% for servicio in servicios %}
+    {%if servicios[servicio]['tipo']=='atencion'%}
+    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    {%endif%}
+    {% endfor %}
+</ul>
+{% endblock %}

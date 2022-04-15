@@ -5,17 +5,145 @@
 {{ super() }}
 {% endblock %}
 {% block nav %}
-<ul>
     {%if log == 1%}
-    <li><a href="/logout">Cerrar sesión.</a></li>
+    <a href="/logout">Cerrar sesión.</a>
     {%else%}
-    <li><a href="/login">Iniciar sesión.</a></li>
+    <a href="/login">Iniciar sesión.</a>
     {%endif%}
-    {%if tipo=="administrador"%}
-    <li><a href="/usuarios">Usuarios.</a></li>
-    {%endif%}
-</ul>
+    {%for texto, link in tipo.items()%}
+        <a href="{{link}}">{{texto}}</a>
+    {%endfor%}
 {% endblock %}
 {% block body %}
-algo
+<section class="contenedor sobre-nosotros">
+    <h2 class="titulo">¿Quiénes somos?</h2>
+    <div class="contenedor-sobre-nosotros">
+        <img src="static/img/ilustracion2.svg" alt="" class="imagen-about-us">
+        <div class="contenido-textos">
+            <h3><span>1</span>Misión</h3>
+            <p>Brindar un trato de calidad médica y humana, logrando la satisfacción de nuestros clientes, por medio de una atención personalizada y tecnología de vanguardia, considerando a las mascota parte importante de las familias actuales de nuestro país, generando además un sentido de responsabilidad y cuidando de ellas.</p>
+            <h3><span>2</span>Visión</h3>
+            <p>Seguir siendo una excelente opción en México, como proveedor de servicios médicos, quirúrgicos y de diagnóstico para: perros, gatos, y mascotas no tradicionales, tanto para los propietarios como para otros médicos veterinarios.</p>
+        </div>
+    </div>
+</section>
+<section class="portafolio">
+    <div class="contenedor">
+        <h2 class="titulo">Portafolio</h2>
+        <div class="galeria-port">
+            <div class="imagen-port">
+                <img src="static/img/veterinaria1.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria2.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria3.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria4.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria5.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria6.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria7.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+            <div class="imagen-port">
+                <img src="static/img/veterinaria8.jpg" alt="">
+                <div class="hover-galeria">
+                    <img src="static/img/icono1.png" alt="">
+                    <p>Nuestro trabajo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="clientes contenedor">
+    <h2 class="titulo">Cuidados para tus macotas</h2>
+    <div class="cards">
+        <div class="card">
+            <img src="static/img/medicamento1.jpg" alt="">
+            <div class="contenido-texto-card">
+                <ul>
+                    <li>Vacunar</li>
+                    <li>Dar afecto</li>
+                    <li>Desparasitar</li>
+                    <li>Brindar dieta adecuada</li>
+                    <li>Ofrecer un espacio adecuado</li>
+                   
+                </ul>
+                
+            </div>
+        </div>
+        <div class="card">
+            <img src="static/img/vacuna1.jpg" alt="">
+            <div class="contenido-texto-card">
+                <ul>
+                    <li>Tener limpieza</li>
+                    <li>Atender su pelaje</li>
+                    <li>Asistir a su veterinario</li>
+                    <li>Cuidar su reproducción</li>
+                    <li>Vigilar su paradero</li>
+                   
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<section class="about-services">
+    <div class="contenedor">
+        <h2 class="titulo">Nuestros servicios</h2>
+        <div class="servicio-cont">
+            <div class="servicio-ind">
+                <img src="static/img/medicina.jpg" width="20" heigth="10" >
+                <h4>Medicina Preventiva</h4>
+                <p>Como prevenir es mejor que curar, te daremos los mejores consejos para el cuidado de tu mascota. Ven a informarte acerca de los planes vacunales y cómo desparasitar a tus animales.</p>
+            </div>
+            <div class="servicio-ind">
+                <img src="static/img/ecografia.jpg" alt="">
+                <h3>Ecografía</h3>
+                <p>La ecografía es una técnica de diagnóstico muy útil, dado que ofrece mucha información sobre el estado de los órganos internos de manera no invasiva, inmediata y precisa.</p>
+            </div>
+            <div class="servicio-ind">
+                <img src="static/img/radiologia.jpg" alt="">
+                <h3>Radiología Digital</h3>
+                <p>La radiología ofrece información sobre el estado tanto de tejidos blandos como de huesos y articulaciones, por lo que es una herramienta de inestimable utilidad.</p>
+            </div>
+        
+        </div>
+    </div>
+</section>
 {% endblock %}

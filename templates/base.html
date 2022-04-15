@@ -6,28 +6,34 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet">
         {% endblock %}
     </head>
     
     <body>
-        <header class="encabezado">
-            <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
-            <img src="http://www.mdvacationclub.com/wp-content/uploads/2018/12/Placeholder-300x300.png" class="logo">
-            <h1 class="encabezado">Veterinaria Pet Lovers</h1>
-            <marquee class="marquesinaE"><h3>Patitas sanas y felices ♥</h3></marquee>
+        <header>
+            <nav>
+                {% block nav %}
+                {% endblock %}
+            </nav>
+            <section class="textos-header">
+                <h1>Veterinaria Pet Lovers</h1>
+                <h2>Porque ellos lo merecen</h2>
+            </section>
+            <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
+                style="height: 100%; width: 100%;">
+                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+                    style="stroke: none; fill: #fff;"></path>
+            </svg></div>
         </header>
-        <nav class="navegacion">
-            {% block nav %}
-            {% endblock %}
-        </nav>
-        <div class="cuerpo">
+        <main>
             {% block body %}
             {% endblock %}
-        </div>
-        <footer class="pie">
+        </main>
+        <footer>
             {% block footer %}
-            <p>Copyright Pet Lovers® 2022. Todos los derechos reservados.</p>
+            <h2 class="titulo-final">&copy; Pet Lovers 2022 | Todos los derechos reservados</h2>
             {% endblock %}
         </footer>
     </body>

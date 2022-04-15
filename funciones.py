@@ -31,3 +31,14 @@ class funciones:
         except IOError:
             print(f"No se pudo abrir el archivo {archivo}")
         return diccionario
+    def lee_diccionario_servicios(archivo:str)->dict:
+        diccionario = {}
+        try:
+            with open(archivo,"r",encoding="utf-8") as fh: #fh: file handle
+                csv_reader = csv.DictReader(fh)
+                for renglon in csv_reader:
+                    llave = renglon['numero']
+                    diccionario[llave] = renglon
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        return diccionario
