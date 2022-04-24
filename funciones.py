@@ -1,3 +1,4 @@
+from asyncore import write
 import csv
 from passlib.hash import sha256_crypt
 import datetime
@@ -42,3 +43,24 @@ class funciones:
         except IOError:
             print(f"No se pudo abrir el archivo {archivo}")
         return diccionario
+
+    def lee_diccionario_citas(archivo:str)->dict:
+        diccionario = {}
+        try:
+            with open(archivo,"r",encoding="utf-8") as fh: #fh: file handle
+                csv_reader = csv.DictReader(fh)
+                for renglon in csv_reader:
+                    llave = renglon['id']
+                    diccionario[llave] = renglon
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        return diccionario
+
+    def escribir_archivo(archivo:str,lista:list):
+        try:
+            with open(archivo,"a",encoding="utf-8") as fh:
+                fh.write("")
+                writer=csv.writer(fh)
+                writer.writerow(lista)
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
