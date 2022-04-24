@@ -5,14 +5,14 @@
 {{ super() }}
 {% endblock %}
 {% block nav %}
-    {%if log == 1%}
-    <a href="/logout">Cerrar sesión.</a>
-    {%else%}
-    <a href="/login">Iniciar sesión.</a>
-    {%endif%}
-    {%for texto, link in tipo.items()%}
-        <a href="{{link}}">{{texto}}</a>
-    {%endfor%}
+{%if log == True%}
+<a href="/logout">Cerrar sesión.</a>
+{%else%}
+<a href="/login">Iniciar sesión.</a>
+{%endif%}
+{%for texto, link in tipo.items()%}
+<a href="{{link}}">{{texto}}</a>
+{%endfor%}
 {% endblock %}
 {% block body %}
 <section class="contenedor sobre-nosotros">

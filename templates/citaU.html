@@ -1,0 +1,78 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Añadir Cita (Usuario/Administrador)
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+    <a href="/">Pagina de Inicio.</a>
+    {%if log == 1%}
+<a href="/logout">Cerrar sesión.</a>
+{%else%}
+<a href="/login">Iniciar sesión.</a>
+{%endif%}
+{% endblock %}
+{% block body %}
+<h1>Ingrese los datos para su proxima cita:</h1>
+<h2>{{mensaje}}</h2>
+<form action="" method="POST">
+    <label for="fecha"> Fecha: </label>
+    <input type="date" id="fecha" name="fecha" required><br>
+    <label for="hora_cita"> Elija la hora de su cita: </label>
+    <input id="hora_cita" type="time" name="hora_cita" list="lista_citas" step="1800"required><br>
+    <label for="nombre_paciente"> Nombre del paciente: </label>
+    <input type="text" id="nombre_paciente" name="nombre_paciente" required><br>
+    <label for="tipo"> Tipo de animal: </label>
+    <input id="tipo" type="list" name="tipo" list="lista_tipo" required><br>
+    <label for="atencion"> Atención a solicitar: </label>
+    <input id="atencion" type="list" name="atencion" list="lista_atencion" required><br>
+    <label for="cliente"> ID del cliente: </label>
+    <input id="cliente" type="list" name="cliente" list="lista_clientes" required><br>
+    <input type="submit" name="enviar" value="Enviar">
+</form>
+<datalist id="lista_clientes">
+    {%for usuario in dictUsuarios%}
+        {%if dictUsuarios[usuario]['tipo']=='cliente'%}
+        <option value="{{dictUsuarios[usuario]['id']}}"></option>
+        {%endif%}
+    {%endfor%}
+</datalist>
+<datalist id="lista_citas">
+    <option value="08:00"></option>
+    <option value="08:30"></option>
+    <option value="09:00"></option>
+    <option value="09:30"></option>
+    <option value="10:00"></option>
+    <option value="10:30"></option>
+    <option value="11:00"></option>
+    <option value="11:30"></option>
+    <option value="12:00"></option>
+    <option value="12:30"></option>
+    <option value="13:00"></option>
+    <option value="13:30"></option>
+    <option value="14:00"></option>
+    <option value="14:30"></option>
+    <option value="15:00"></option>
+    <option value="15:30"></option>
+    <option value="16:00"></option>
+    <option value="16:30"></option>
+    <option value="17:00"></option>
+    <option value="17:30"></option>
+    <option value="18:00"></option>
+    <option value="18:30"></option>
+</datalist>
+<datalist id="lista_tipo">
+    <option value="Perro"></option>
+    <option value="Gato"></option>
+    <option value="Pez"></option>
+    <option value="Ave"></option>
+    <option value="Roedor"></option>
+    <option value="Conejo"></option>
+    <option value="Otro"></option>
+</datalist>
+<datalist id="lista_atencion">
+    <option value="Veterinaria"></option>
+    <option value="Boutique"></option>
+</datalist>
+
+{% endblock %}

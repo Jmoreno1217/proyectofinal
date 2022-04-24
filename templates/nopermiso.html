@@ -1,0 +1,21 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Acceso Restringido
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+    <a href="/">Pagina de Inicio.</a>
+    {%if log == 1%}
+<a href="/logout">Cerrar sesión.</a>
+{%else%}
+<a href="/login">Iniciar sesión.</a>
+{%endif%}
+{% endblock %}
+
+{% block body %}
+<img src="static/img/accesoRestringido.png" alt="">
+<h1>Ups, parece que no es por aqui :(</h1>
+<p>Lo sentimos, pero parece que no tienes los permisos para hacer lo que querias hacer, mejor intenta hacer otra cosa ;)</p>
+<p>Volver a la <a href="/">pagina de Inicio.</a></p>
+{% endblock %}
