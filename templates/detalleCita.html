@@ -1,0 +1,20 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Cita No. {{cita['id']}}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+<a href="/servicios">Atras.</a>
+{% endblock %}
+{% block body %}
+<h1>Cita:</h1>
+<p><strong>ID: </strong> {{cita['id']}}</p>
+<p><strong>Cliente: </strong> {{cliente}} </p>
+<p><strong>Nombre de la Mascota: </strong> {{cita['nombreMascota']}}</p>
+<p><strong>Tipo de Mascota: </strong> {{cita['tipoMascota']}}</p>
+<p><strong>Atención solicitada: </strong> {{cita['atencion']}}</p>
+<p><strong>Fecha de realización: </strong> {{cita['fecha']}}</p>
+<p><strong>Hora de realización: </strong> {{cita['hora']}}</p>
+{% endblock %}

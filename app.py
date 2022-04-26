@@ -12,13 +12,12 @@ tipo = str
 usuarioActivo=NULL
 diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
 diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+diccionarioMedicamentos = funciones.lee_diccionario_medicamentos('medicamentos.csv')
 diccCliente = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion'}
 diccUsuario = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion','Agregar una receta':'/agregar_receta', 'Agregar una atención':'/agregar_atencion'}
 diccAdmin = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas',
                 'Historial de atención':'/historial_atencion','Agregar una receta':'/agregar_receta', 'Agregar una atención':
-                '/agregar_atencion','Usuarios':'/usuarios','Medicinas':'/medicinas','Servicios':'/servicios','Informe de ventas diarias':'/ventas_diarias','Informe de ventas mensuales':'/ventas_mensuales'}
-def pagNoEncontrada():
-    return redirect("/pag_no_encontrada")
+                '/agregar_atencion','Usuarios':'/usuarios','Medicamentos':'/medicamentos','Servicios':'/servicios','Informe de ventas diarias':'/ventas_diarias','Informe de ventas mensuales':'/ventas_mensuales'}
 
 @app.route("/")
 def index():
@@ -94,22 +93,36 @@ def logout():
 @app.route("/usuarios")
 def listaUsuarios():
     global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
     if tipo != "administrador":
         return redirect("/acceso_restringido")
+    diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
     return render_template("usuarios.html", diccUsuarios = diccionarioUsuarios)
 
 @app.route("/usuariova/<usuario>")
 def vistaUsuarioAdmin(usuario):    
     global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
     if tipo != "administrador":
-        return redirect("/acceso_Restringido")
+        return redirect("/acceso_restringido")
     print(usuario)
     print(diccionarioUsuarios[usuario])
     return render_template("usuariova.html",usuario = diccionarioUsuarios[usuario])
 
 @app.route("/servicios")
 def vistaServicios():
-    return render_template("servicios.html",servicios=diccionarioServicios)
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+    return render_template("servicios.html",servicios=diccionarioServicios, diccUsuarios = diccionarioUsuarios)
 
 @app.route("/agendar_cita", methods=['GET','POST'])
 def crearCita():
@@ -118,7 +131,8 @@ def crearCita():
     print(logeado)
     if logeado==False:
         return redirect("/login")
-    diccionarioCitas = funciones.lee_diccionario_citas('citas.csv')
+    diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
     if request.method == "GET":
         if tipo=="cliente":
             return render_template("citaC.html")
@@ -127,7 +141,8 @@ def crearCita():
     else:
         if request.method=="POST":
             if usuarioActivo.tipo == 'cliente':
-                id= len(diccionarioCitas)+1
+                x = datetime.datetime.now()
+                id= funciones.generar_id(diccionarioServicios)
                 idCliente = usuarioActivo.id
                 nombre_paciente = request.form['nombre_paciente']
                 tipo2 = request.form['tipo']
@@ -135,8 +150,10 @@ def crearCita():
                 fecha = request.form['fecha']
                 hora_cita = request.form['hora_cita']
                 temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
+                temp2 =[id, "cita"]
             else:
-                id= len(diccionarioCitas)+1
+                x = datetime.datetime.now()
+                id= funciones.generar_id(diccionarioServicios)
                 idCliente = request.form['cliente']
                 nombre_paciente = request.form['nombre_paciente']
                 tipo2 = request.form['tipo']
@@ -144,7 +161,9 @@ def crearCita():
                 fecha = request.form['fecha']
                 hora_cita = request.form['hora_cita']
                 temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
+                temp2 =[id, "cita"]
             try:
+                funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
                 if tipo=="cliente":
                     return render_template("citaC.html", mensaje = "Cita registrada!!!")
@@ -160,10 +179,10 @@ def crearCita():
 def crearAtencion():
     global logeado
     global usuarioActivo
-    print(logeado)
     if logeado==False:
         return redirect("/login")
-    diccionarioCitas = funciones.lee_diccionario_citas('citas.csv')
+    diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
     if request.method == "GET":
         if tipo=="cliente":
             return redirect("/acceso_restringido")
@@ -172,7 +191,7 @@ def crearAtencion():
     else:
         if request.method=="POST":
             x = datetime.datetime.now()
-            id= len(diccionarioCitas)+1
+            id= funciones.generar_id(diccionarioServicios)
             idCliente = request.form['cliente']
             nombre_paciente = request.form['nombre_paciente']
             tipo2 = request.form['tipo']
@@ -180,15 +199,87 @@ def crearAtencion():
             fecha = x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
             hora_cita = x.strftime("%H")+":"+x.strftime("%M")
             temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
+            temp2 =[id, "cita"]
             try:
+                funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
                 return render_template("citaA.html",dictUsuarios = diccionarioUsuarios, mensaje = "Cita registrada!!!")
             except:
                 return render_template("citaA.html",dictUsuarios = diccionarioUsuarios, mensaje = "Ha ocurrido un error, intente mas tarde o solicite asistencia.")
 
+@app.route("/cita/<id>")
+def detalleCita(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccCita = funciones.lee_diccionario_citas("citas.csv")
+    cita = diccCita[id]
+    print(cita['idCliente'])
+    idcliente = cita['idCliente']
+    cliente = str
+    for usuario in diccionarioUsuarios.items():
+        if usuario[1]['id'] == idcliente:
+            cliente = usuario[1]['nombreCompleto']
+    return render_template("detalleCita.html", cita = cita, cliente = cliente)
+
+@app.route("/medicamentos")
+def verMedicamentos():
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    diccionarioMedicamentos = funciones.lee_diccionario_medicamentos('medicamentos.csv')
+    return render_template("medicamentos.html", medicamentos = diccionarioMedicamentos)
+
+@app.route("/medicamento/<codigo>")
+def medicamentoEspesifico(codigo):
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    diccionarioMedicamentos = funciones.lee_diccionario_medicamentos('medicamentos.csv')
+    medicamento=diccionarioMedicamentos[codigo]
+    return render_template("descMedicamento.html", medicamento = medicamento)
+
+@app.route("/añadir_medicina", methods=['GET','POST'])
+def agregarMedicina():
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    if request.method=="GET":
+        return render_template("agregarMedicina.html")
+    else:
+        if request.method == "POST":
+            codigo = request.form['codigo']
+            nombre_medicamento = request.form['nombre_medicamento']
+            formula = request.form['formula']
+            formula = formula.replace(',','☺')
+            administracion = request.form['administracion']
+            presentacion = request.form['presentacion']
+            tipo_animal = request.form['tipo_animal']
+            try:
+                medicamento=[codigo, nombre_medicamento, formula, administracion, presentacion, tipo_animal]
+                funciones.escribir_archivo("medicamentos.csv", medicamento)
+                return render_template("agregarMedicina.html", mensaje= "Medicamento agregado con exito!!!")
+            except:
+                return render_template("agregarMedicina.html", mensaje= "Ha ocurrido un error, intente mas tarde o solicite asistencia.")
+                pass
+            pass
+    pass
+
 @app.route("/acceso_restringido")
 def accesoRestringido():
-    return render_template("nopermiso.html",log = logeado)
+    return render_template("sinpermiso.html",log = logeado)
+
 if __name__ == "__main__":
     logeado = False
+    #s = funciones.generar_id(funciones.lee_diccionario_servicios("servicios.csv"))
+    #print(s)
     app.run(debug=True)

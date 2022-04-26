@@ -1,0 +1,19 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - {{medicamento['nombre']}} ({{medicamento['presentacion']}})
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+<a href="/medicamentos">Atras.</a>
+{% endblock %}
+{% block body %}
+<h1>Medicamento:</h1>
+<p><strong>Codigo: </strong> {{medicamento['codigo']}}</p>
+<p><strong>Nombre: </strong> {{medicamento['nombre']}}</p>
+<p><strong>Formula: </strong> {{medicamento['formula'].replace('☺',',')}}</p>
+<p><strong>Administración: </strong> {{medicamento['administracion']}}</p>
+<p><strong>Presentación: </strong> {{medicamento['presentacion']}}</p>
+<p><strong>Tipo de animal: </strong> {{medicamento['tipoMascota']}}</p>
+{% endblock %}

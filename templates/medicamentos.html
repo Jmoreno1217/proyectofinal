@@ -1,0 +1,19 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Medicamentos
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+<a href="/añadir_medicina">Añadir Medicamento.</a>
+<a href="/">Eliminar Medicamento.(?)</a>
+{% endblock %}
+{% block body %}
+<h2>Medicamentos:</h2>
+<ul>
+    {% for medicamento in medicamentos %}
+    <li><a href="/medicamento/{{medicamentos[medicamento]['codigo']}}" class="liga">{{medicamentos[medicamento]['nombre']}} ({{medicamentos[medicamento]['presentacion']}})</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

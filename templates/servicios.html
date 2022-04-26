@@ -1,5 +1,5 @@
 {%  extends "base.html"  %}
-{% block title %}Veterinaria Pet Lovers® - Usuarios
+{% block title %}Veterinaria Pet Lovers® - Servicios
 {% endblock %}
 {% block head %}
 {{ super() }}
@@ -14,21 +14,21 @@
     <ul>
     {% for servicio in servicios %}
     {%if servicios[servicio]['tipo']=='cita'%}
-    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    <li><a href="/{{servicios[servicio]['tipo']}}/{{servicios[servicio]['numero']}}" class="liga">{{servicios[servicio]['numero']}}</a></li>
     {%endif%}
     {% endfor %}
     <li><h3>Recetas</h3></li>
     <ul>
     {% for servicio in servicios %}
     {%if servicios[servicio]['tipo']=='receta'%}
-    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    <li><a href="/{{servicios[servicio]['tipo']}}/{{servicios[servicio]['numero']}}" class="liga">{{servicios[servicio]['numero']}}</a></li>
     {%endif%}
     {% endfor %}
     <li><h3>Atención</h3></li>
     <ul>
     {% for servicio in servicios %}
     {%if servicios[servicio]['tipo']=='atencion'%}
-    <li><a href="#" class="liga">{{servicios[servicio]['numero']}}</a></li>
+    <li><a href="/{{servicios[servicio]['tipo']}}/{{servicios[servicio]['numero']}}" class="liga">{{servicios[servicio]['numero']}}</a></li>
     {%endif%}
     {% endfor %}
 </ul>

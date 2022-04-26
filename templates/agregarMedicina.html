@@ -1,0 +1,59 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Agregar Medicamento
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+<a href="/medicamentos">Atras.</a>
+{% endblock %}
+{% block body %}
+<h1>Agregar Medicina:</h1>
+<h2>{{mensaje}}</h2>
+<form action="" method="POST">
+    <label for="codigo"> Código: </label>
+    <input type="codigo" id="codigo" name="codigo" required><br>
+    
+    <label for="nombre_medicamento"> Nombre del medicamento: </label>
+    <input type="text" id="nombre_medicamento" name="nombre_medicamento" required><br>
+    
+    <label for="formula"> Formula: </label>
+    <input type="formula" id="formula" name="formula" required><br>
+
+    <label for="administracion"> Tipo de administración: </label>
+    <input id="administracion" name="administracion" list="lista_administracion" required><br>
+
+    <label for="presentacion"> Presentación: </label>
+    <input type="presentacion" id="presentacion" name="presentacion" required><br>
+
+    <label for="tipo_animal"> Tipo de animal: </label>
+    <input id="tipo_animal" name="tipo_animal" list="lista_tipo_animal" required><br>
+
+    <input type="submit" name="enviar" value="Enviar">
+</form>
+<datalist id="lista_administracion">
+    <option value="Oral"></option>
+    <option value="Inyectable"></option>
+    <option value="Rectal"></option>
+    <option value="Vaginal "></option>
+    <option value="Ocular"></option>
+    <option value="Ótica"></option>
+    <option value="Nasal"></option>
+    <option value="Nebulización"></option>
+    <option value="Cutaneo"></option>
+</datalist>
+<datalist id="lista_tipo_animal">
+    <option value="Perrunos"></option>
+    <option value="Felinos"></option>
+    <option value="Ovino"></option>
+    <option value="Equinos"></option>
+    <option value="Bovinos"></option>
+    <option value="Porcino"></option>
+    <option value="Caprino"></option>
+    <option value="Aves"></option>
+    <option value="Reptiles"></option>
+    <option value="Peces"></option>
+    <option value="Otros"></option>
+</datalist>
+{% endblock %}
