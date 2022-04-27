@@ -1,0 +1,18 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Receta No. {{receta['id_receta']}}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+<a href="/servicios">Atras.</a>
+{% endblock %}
+{% block body %}
+<h1>Receta:</h1>
+<p><strong>ID de Receta: </strong> {{receta['id_receta']}}</p>
+<p><strong>ID de Cita: </strong> <a href="/detalle/{{receta['id_cita']}}">{{receta['id_cita']}}</a></p>
+<p><strong>Indicaciones: </strong> {{receta['indicaciones']}}</p>
+<p><strong>Detalles: </strong> {{receta['detalles']}}</p>
+<p><strong>Fecha: </strong> {{receta['fecha']}}</p>
+{% endblock %}

@@ -1,0 +1,24 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Buscar recetas de usuario
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h1>Seleccione el usuario a buscar:</h1>
+<form action="" method="POST">
+    <label for="id_cliente"> Cliente: </label>
+    <input id="id_cliente" name="id_cliente" list="lista_clientes" required><br>
+    <input type="submit" name="enviar" value="Enviar">
+</form>
+<datalist id="lista_clientes">
+    {%for cliente in dictClientes%}
+        {%if dictClientes[cliente]['tipo']=='cliente'%}
+        <option value="{{dictClientes[cliente]['id']}}"></option>
+        {%endif%}
+    {%endfor%}
+</datalist>
+{% endblock %}

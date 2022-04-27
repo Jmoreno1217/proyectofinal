@@ -1,0 +1,30 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Historial de Recetas
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h2>Historial de Atenciones:</h2>
+<ul>
+    <li><h3>Citas</h3></li>
+    <ul>
+    {% for servicio in servicios %}
+    {%if servicios[servicio]['tipo']=='cita'%}
+    <li><a href="/{{servicios[servicio]['tipo']}}/{{servicios[servicio]['numero']}}" class="liga">{{servicios[servicio]['numero']}}</a>. Fecha: {{diccCitas[servicio]['fecha']}}.</li>
+    {%endif%}
+    {% endfor %}
+    </ul>
+    <li><h3>Atenciones</h3></li>
+    <ul>
+    {% for servicio in servicios %}
+    {%if servicios[servicio]['tipo']=='atencion'%}
+    <li><a href="/{{servicios[servicio]['tipo']}}/{{servicios[servicio]['numero']}}" class="liga">{{servicios[servicio]['numero']}}</a>. Fecha: {{diccCitas[servicio]['fecha']}}.</li>
+    {%endif%}
+    {% endfor %}
+    </ul>
+</ul>
+{% endblock %}

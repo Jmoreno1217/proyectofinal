@@ -1,0 +1,29 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Agregar Receta
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h1>Agregar Receta:</h1>
+<h2>{{mensaje}}</h2>
+<form action="" method="POST">
+    <label for="id_cita"> ID de la cita: </label>
+    <input id="id_cita" name="id_cita" list="lista_citas" required><br>
+    <label for="indicaciones"> Indicaciones: </label>
+    <textarea id="indicaciones" name="indicaciones" required></textarea><br>
+    <label for="detalles"> Detalles: </label>
+    <textarea id="detalles" name="detalles" required></textarea><br>
+    <label for="fecha"> Fecha: </label>
+    <input id="fecha" type="date" name="fecha" required><br>
+    <input type="submit" name="enviar" value="Enviar">
+</form>
+<datalist id="lista_citas">
+    {%for cita in dictCitas%}
+        <option value="{{dictCitas[cita]['id']}}"></option>
+    {%endfor%}
+</datalist>
+{% endblock %}

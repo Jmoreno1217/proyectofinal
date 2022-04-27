@@ -1,0 +1,17 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Historial de Recetas
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h2>Historial de Recetas:</h2>
+<ul>
+    {% for receta in diccrecetas %}
+    <li><a href="/receta/{{diccrecetas[receta]['id_receta']}}" class="liga">{{diccrecetas[receta]['id_receta']}}</a>. Fecha: {{diccrecetas[receta]['fecha']}}.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

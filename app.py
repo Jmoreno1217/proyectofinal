@@ -141,7 +141,6 @@ def crearCita():
     else:
         if request.method=="POST":
             if usuarioActivo.tipo == 'cliente':
-                x = datetime.datetime.now()
                 id= funciones.generar_id(diccionarioServicios)
                 idCliente = usuarioActivo.id
                 nombre_paciente = request.form['nombre_paciente']
@@ -152,7 +151,6 @@ def crearCita():
                 temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
                 temp2 =[id, "cita"]
             else:
-                x = datetime.datetime.now()
                 id= funciones.generar_id(diccionarioServicios)
                 idCliente = request.form['cliente']
                 nombre_paciente = request.form['nombre_paciente']
@@ -181,6 +179,8 @@ def crearAtencion():
     global usuarioActivo
     if logeado==False:
         return redirect("/login")
+    if tipo == "cliente":
+        return redirect("/acceso_restringido")
     diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
     diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
     if request.method == "GET":
@@ -199,7 +199,7 @@ def crearAtencion():
             fecha = x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
             hora_cita = x.strftime("%H")+":"+x.strftime("%M")
             temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
-            temp2 =[id, "cita"]
+            temp2 =[id, "atencion"]
             try:
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
@@ -220,7 +220,45 @@ def detalleCita(id):
     for usuario in diccionarioUsuarios.items():
         if usuario[1]['id'] == idcliente:
             cliente = usuario[1]['nombreCompleto']
-    return render_template("detalleCita.html", cita = cita, cliente = cliente)
+    return render_template("detalleCita.html", cita = cita, cliente = cliente, mensaje = "Cita")
+
+@app.route("/atencion/<id>")
+def detalleAtencion(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccCita = funciones.lee_diccionario_citas("citas.csv")
+    cita = diccCita[id]
+    print(cita['idCliente'])
+    idcliente = cita['idCliente']
+    cliente = str
+    for usuario in diccionarioUsuarios.items():
+        if usuario[1]['id'] == idcliente:
+            cliente = usuario[1]['nombreCompleto']
+    return render_template("detalleCita.html", cita = cita, cliente = cliente, mensaje = "Atención")
+
+@app.route("/receta/<id>")
+def detalleReceta(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
+    receta = diccRecetas[id]
+    return render_template("detalleReceta.html",receta = receta)
+
+@app.route("/detalle/<id>")
+def detalleReceta2(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+    cita = "/cita/"+id
+    atencion = "/atencion/"+id
+    if diccionarioServicios[id]['tipo'] == "cita":
+        return redirect(cita)
+    elif diccionarioServicios[id]['tipo'] == "atencion":
+        return redirect(atencion)
+
 
 @app.route("/medicamentos")
 def verMedicamentos():
@@ -273,6 +311,109 @@ def agregarMedicina():
                 pass
             pass
     pass
+
+@app.route("/agregar_receta", methods=['GET','POST'])
+def agregarReceta():
+    diccionarioCitas=funciones.lee_diccionario_citas("citas.csv")
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+    if logeado==False:
+        return redirect("/login")
+    if tipo == "cliente":
+        return redirect("/acceso_restringido")
+    if request.method=="GET":
+        return render_template("agregarReceta.html",dictCitas=diccionarioCitas)
+        pass
+    else:
+        if request.method=="POST":
+            id= funciones.generar_id(diccionarioServicios)
+            id_cita=request.form['id_cita']
+            indicaciones=request.form['indicaciones']
+            detalles=request.form['detalles']
+            fecha=request.form['fecha']
+            receta = [id,id_cita,indicaciones,detalles,fecha]
+            servicio = [id,"receta"]
+            try:
+                funciones.escribir_archivo("servicios.csv",servicio)
+                funciones.escribir_archivo("recetas.csv",receta)
+                return render_template("agregarReceta.html",dictCitas=diccionarioCitas, mensaje="Receta registrada con exito!!!")
+            except:
+                return render_template("agregarReceta.html",dictCitas=diccionarioCitas, mensaje="Ha ocurrido un error, intente mas tarde o solicite asistencia.")
+
+@app.route("/historial_recetas")
+def historialRecetas():
+    if logeado==False:
+        return redirect("/login")
+    if tipo == "cliente":
+        url = "/historial_recetas/"+usuarioActivo.id
+        return redirect(url)
+    else:
+        return redirect("/buscar_recetas_usuario")
+
+@app.route("/buscar_recetas_usuario", methods=['GET','POST'])
+def buscarRecetasUsuario():
+    if logeado==False:
+        return redirect("/login")
+    if tipo == "cliente":
+        url = "/historial_recetas/"+usuarioActivo.id
+        return redirect(url)
+    if request.method == "GET":
+        dictUsuarios = funciones.lee_diccionario_usuarios("usuarios.csv")
+        return render_template("historialRecetasGenerico.html", dictClientes=dictUsuarios)
+    else:
+        if request.method == "POST":
+            url = "/historial_recetas/"+request.form['id_cliente']
+            return redirect(url)
+
+@app.route("/historial_recetas/<id>")
+def historialRecetasCliente(id):
+    if logeado==False:
+        return redirect("/login")
+    diccrecetas = {}
+    diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
+    diccCitas = funciones.lee_diccionario_citas("citas.csv")
+    for receta in diccRecetas:
+        for cita in diccCitas:
+            if diccRecetas[receta]['id_cita']==diccCitas[cita]['id'] and diccCitas[cita]['idCliente']==id:
+                diccrecetas[diccRecetas[receta]['id_receta']]=diccRecetas[receta]
+    return render_template("historialRecetas.html",diccrecetas=diccRecetas)
+
+
+@app.route("/historial_atencion")
+def historialAtencion():
+    if logeado==False:
+        return redirect("/login")
+    if tipo == "cliente":
+        url = "/historial_atencion/"+usuarioActivo.id
+        return redirect(url)
+    else:
+        return redirect("/buscar_atencion_usuario")
+
+@app.route("/buscar_atencion_usuario", methods=['GET','POST'])
+def buscarAtencionUsuario():
+    if logeado==False:
+        return redirect("/login")
+    if tipo == "cliente":
+        url = "/historial_atencion/"+usuarioActivo.id
+        return redirect(url)
+    if request.method == "GET":
+        dictUsuarios = funciones.lee_diccionario_usuarios("usuarios.csv")
+        return render_template("historialRecetasGenerico.html", dictClientes=dictUsuarios)
+    else:
+        if request.method == "POST":
+            url = "/historial_atencion/"+request.form['id_cliente']
+            return redirect(url)
+
+@app.route("/historial_atencion/<id>")
+def historialAtencionCliente(id):
+    if logeado==False:
+        return redirect("/login")
+    diccatencion = {}
+    diccCitas = funciones.lee_diccionario_citas("citas.csv")
+    diccservicios=funciones.lee_diccionario_servicios("servicios.csv")
+    for cita in diccCitas:
+        if diccCitas[cita]['idCliente']==id:
+            diccatencion[diccCitas[cita]['id']]=diccCitas[cita]
+    return render_template("historialAtencion.html",servicios=diccservicios,diccCitas=diccCitas)
 
 @app.route("/acceso_restringido")
 def accesoRestringido():
