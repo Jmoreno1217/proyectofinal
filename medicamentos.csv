@@ -1,9 +1,10 @@
-codigo,nombre,formula,administracion,presentacion,tipoMascota
+codigo,nombre,formula,administracion,presentacion,tipoMascota,precio
 
-1234567890,Amoxi-Tabs C®-250,Amoxicilina base 200 mg☺ ácido clavulánico 50 mg☺ excipientes c.s.p. 1 tableta,Oral, Caja x 10 tabletas,Perrunos
+1234567890,Amoxi-Tabs C®-250,Amoxicilina base 200 mg☺ ácido clavulánico 50 mg☺ excipientes c.s.p. 1 tableta,Oral, Caja x 10 tabletas,Perrunos,20
 
-1234567891,Amoxi-Tabs C®-250,Amoxicilina base 200 mg☺ ácido clavulánico 50 mg☺ excipientes c.s.p. 1 tableta,Oral, Caja x 50 tabletas,Perrunos
+1234567891,Amoxi-Tabs C®-250,Amoxicilina base 200 mg☺ ácido clavulánico 50 mg☺ excipientes c.s.p. 1 tableta,Oral, Caja x 50 tabletas,Perrunos,80
 
-1234567892,Agrogenta® 11,Gentamicina (como sulfato) 110 mg☺ excipientes c.s.p. 1 mL.,Inyectable,Frasco x 100 mL,Otros
+1234567892,Agrogenta® 11,Gentamicina (como sulfato) 110 mg☺ excipientes c.s.p. 1 mL.,Inyectable,Frasco x 100 mL,Otros,35
 
-1234567893,Agrogenta® 11,Gentamicina (como sulfato) 110 mg☺ excipientes c.s.p. 1 mL.,Inyectable,Frasco x 250 mL,Otros
+1234567893,Agrogenta® 11,Gentamicina (como sulfato) 110 mg☺ excipientes c.s.p. 1 mL.,Inyectable,Frasco x 250 mL,Otros,60
+

@@ -1,17 +1,21 @@
-numero,tipo
-220425001,atencion
+numero,tipo,subTotal
+220425001,atencion,0
 
-220425002,cita
+220425002,cita,0
 
-220425003,cita
+220425003,cita,0
 
-220425004,cita
+220425004,cita,0
 
-220426001,receta
+220426001,receta,10
 
-220426002,receta
+220426002,receta,10
 
-220426003,receta
+220426003,receta,10
 
-220426004,atencion
-220426005,receta
+220426004,atencion,0
+
+220426005,receta,10
+
+220427001,receta,$5000.00
+

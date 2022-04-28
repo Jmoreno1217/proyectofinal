@@ -81,6 +81,7 @@ def login():
         except:
                 msg = f'No esta registrado el usuario ingresado.'
                 return render_template("login.html",mensaje=msg)
+
 @app.route("/logout", methods=['GET'])
 def logout():
     global logeado
@@ -149,7 +150,7 @@ def crearCita():
                 fecha = request.form['fecha']
                 hora_cita = request.form['hora_cita']
                 temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
-                temp2 =[id, "cita"]
+                temp2 =[id, "cita", "0"]
             else:
                 id= funciones.generar_id(diccionarioServicios)
                 idCliente = request.form['cliente']
@@ -199,7 +200,7 @@ def crearAtencion():
             fecha = x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
             hora_cita = x.strftime("%H")+":"+x.strftime("%M")
             temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
-            temp2 =[id, "atencion"]
+            temp2 =[id, "atencion","0"]
             try:
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
@@ -302,8 +303,9 @@ def agregarMedicina():
             administracion = request.form['administracion']
             presentacion = request.form['presentacion']
             tipo_animal = request.form['tipo_animal']
+            precio = request.form['precio']
             try:
-                medicamento=[codigo, nombre_medicamento, formula, administracion, presentacion, tipo_animal]
+                medicamento=[codigo, nombre_medicamento, formula, administracion, presentacion, tipo_animal, precio]
                 funciones.escribir_archivo("medicamentos.csv", medicamento)
                 return render_template("agregarMedicina.html", mensaje= "Medicamento agregado con exito!!!")
             except:
@@ -316,22 +318,28 @@ def agregarMedicina():
 def agregarReceta():
     diccionarioCitas=funciones.lee_diccionario_citas("citas.csv")
     diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+    diccionarioMedicamentos = funciones.lee_diccionario_medicamentos('medicamentos.csv')
     if logeado==False:
         return redirect("/login")
     if tipo == "cliente":
         return redirect("/acceso_restringido")
     if request.method=="GET":
-        return render_template("agregarReceta.html",dictCitas=diccionarioCitas)
+        return render_template("agregarReceta.html",dictCitas=diccionarioCitas,dictMedicamentos=diccionarioMedicamentos)
         pass
     else:
         if request.method=="POST":
             id= funciones.generar_id(diccionarioServicios)
             id_cita=request.form['id_cita']
-            indicaciones=request.form['indicaciones']
+            medicamentosRecetados=request.form['medicamentosRecetados']
+            print(medicamentosRecetados)
+            medicamentosRecetados=medicamentosRecetados.replace("\"","")
+            medicamentosRecetados=medicamentosRecetados.replace(",","☺")
+            print(medicamentosRecetados)
             detalles=request.form['detalles']
             fecha=request.form['fecha']
-            receta = [id,id_cita,indicaciones,detalles,fecha]
-            servicio = [id,"receta"]
+            subTotal=request.form['subTotal']
+            receta = [id,id_cita,medicamentosRecetados,detalles,fecha]
+            servicio = [id,"receta",subTotal]
             try:
                 funciones.escribir_archivo("servicios.csv",servicio)
                 funciones.escribir_archivo("recetas.csv",receta)

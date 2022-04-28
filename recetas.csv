@@ -1,8 +1,4 @@
-id_receta,id_cita,indicaciones,detalles,fecha
+id_receta,id_cita,medicamentosRecetados,detalles,fecha
 
-220426001,220425002,nose,mejorate we,2022-04-26
-220426001,220425004,ases,cc,2022-04-27
-220426001,220425003,sdfae,asefsd,2022-04-26
-220426002,220425003,asdfeas,easfes,2022-04-26
-220426003,220425003,asefseafw,werfweas,2022-04-26
-220426005,220425001,wqweqweqw,eqweqwrqw,2022-04-30
+220427010,220425001,Amoxi-Tabs C®-250☺  Caja x 50 tabletas (80).☺ Amoxi-Tabs C®-250☺  Caja x 10 tabletas (20).☺ Agrogenta® 11☺ Frasco x 100 mL (35).☺ Agrogenta® 11☺ Frasco x 250 mL (60).☺ ,asefas,2022-04-27
+
