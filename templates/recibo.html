@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+        <title>recibo</title>
+        <link rel="stylesheet" href="css/recibo.css" type="text/css">
+    </head>
+<body>
+    <table style="text-align: left;  width: 100%;" cellpadding="2" cellspacing="2">
+        <tbody>
+            <tr>
+                <td style="width: 25%;" colspan="1" rowspan="2"><img src="{{url_for('static', filename='img/logo.PNG')}}" margin="2px" width="100%" height="100%"></td>
+                <td style="width: 75%; text-align: center;"><h3><strong>Veterinaria Pet Lovers</strong></h3><h4>Porque ellos lo merecen</h4></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">{{mensaje}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <table style="text-align: left;  width: 100%;" cellpadding="2" cellspacing="2">
+        <tbody>
+            <tr>
+                <td style="width: 30%; text-align: right;">ID de la cita:</td>
+                <td>{{cita['id']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Nombre del cliente:</td>
+                <td>{{cliente}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Nombre del paciente:</td>
+                <td>{{cita['nombreMascota']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Tipo de mascota:</td>
+                <td>{{cita['tipoMascota']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Atencion solicitada:</td>
+                <td>{{cita['atencion']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Fecha de la cita:</td>
+                <td>{{cita['fecha']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Hora de la cita:</td>
+                <td>{{cita['hora']}}</td>
+            </tr>
+            <tr>
+                <td style="width: 30%; text-align: right;">Fecha de Expedición:</td>
+                <td>{{fechaE}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table style="text-align: left; width: 100%;" cellpadding="2" cellspacing="2">
+        <tbody>
+            <tr>
+                <td style="text-align: center;">Firma del cliente:<br><br><br><hr style="width: 100%; height: 2px;"></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;" colspan="1" rowspan="1">
+                    <span>Imprima 2 copias de este recibo, el cliente debe de quedarse con una copia.</span><br><br><span>Pet Lovers 2022 | Todos los derechos reservados</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br>
+</body>
+</html>

@@ -17,4 +17,12 @@
 <p><strong>Atención solicitada: </strong> {{cita['atencion']}}</p>
 <p><strong>Fecha de realización: </strong> {{cita['fecha']}}</p>
 <p><strong>Hora de realización: </strong> {{cita['hora']}}</p>
+
+<br>
+{%if mensaje=="Cita"%}
+<a href="/pdf/r{{cita['id']}}">Imprimir Recibo</a>
+{%else%}
+<a href="/pdf/A{{cita['id']}}">Imprimir Recibo</a>
+{%endif%}
+<br>
 {% endblock %}

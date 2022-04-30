@@ -33,6 +33,17 @@ class funciones:
         except IOError:
             print(f"No se pudo abrir el archivo {archivo}")
         return diccionario
+    def lee_diccionario_usuariosID(archivo:str)->dict:
+        diccionario = {}
+        try:
+            with open(archivo,"r",encoding="utf-8") as fh: #fh: file handle
+                csv_reader = csv.DictReader(fh)
+                for renglon in csv_reader:
+                    llave = renglon['id']
+                    diccionario[llave] = renglon
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        return diccionario
     def lee_diccionario_servicios(archivo:str)->dict:
         diccionario = {}
         try:
@@ -88,6 +99,17 @@ class funciones:
         except IOError:
             print(f"No se pudo abrir el archivo {archivo}")
     
+    def cambiaContrasena(user:str, passw:str,archivo:str):
+        dict1 = dict
+        with open(archivo,'r') as fh1:
+            dict1= {rows[0]:rows[1] for rows in fh1}
+        with open(archivo,'w') as fh:
+            for usuario in dict1:
+                if dict1[usuario]['usuario'] == user:
+                    dict1[usuario]['password'] = passw
+            fh.write(dict1)
+        return 1
+
     def generar_id(dictServicio:dict)->str:
         x=datetime.datetime.now()
         id = x.strftime("%y")+x.strftime("%m") + x.strftime("%d")+"000"

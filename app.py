@@ -1,9 +1,10 @@
 from asyncio.windows_events import NULL
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, url_for
 from funciones import funciones
 from passlib.hash import sha256_crypt
 import datetime
 from usuario import usuario1
+from flask_weasyprint import render_pdf
 
 app=Flask(__name__)
 app.secret_key ='lwiu74dhn2SuF3w'
@@ -81,6 +82,30 @@ def login():
         except:
                 msg = f'No esta registrado el usuario ingresado.'
                 return render_template("login.html",mensaje=msg)
+
+@app.route("/cambiar_contraseña", methods=['GET','POST'])
+def passMod():
+    if request.method == 'GET':
+        return render_template("passMod.html")
+    else:
+        try:
+            if request.method == 'POST':
+                usuario = request.form['username']
+                password = request.form['password']
+                if usuario in diccionarioUsuarios:
+                    usuario = request.form['username']
+                    password= request.form['password']
+                    npassword = request.form['npassword']
+                    if usuario in diccionarioUsuarios:
+                        diccionarioUsuarios[usuario]['password'] = sha256_crypt.hash(npassword)
+                        n = funciones.cambiaContrasena('usuario',npassword,"usuarios.csv")
+                        return render_template('passMod',usuario=usuario,mensaje='Password cambiado')
+                    else:
+                        return render_template('passMod',usuario=usuario,mensaje='Las contraseñas no son las mismas, intente de nuevo.')
+        except:
+                msg = f'No esta registrado el usuario ingresado.'
+                return render_template("passMod.html",mensaje=msg)
+    
 
 @app.route("/logout", methods=['GET'])
 def logout():
@@ -165,9 +190,15 @@ def crearCita():
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
                 if tipo=="cliente":
-                    return render_template("citaC.html", mensaje = "Cita registrada!!!")
+                    doc="r"+id
+                    url="/pdf/"+doc
+                    return redirect(url)
+                    #return render_template("citaC.html", mensaje = "Cita registrada!!!")
                 else:
-                    return render_template("citaU.html",dictUsuarios = diccionarioUsuarios, mensaje = "Cita registrada!!!")
+                    doc="r"+id
+                    url="/pdf/"+doc
+                    return redirect(url)
+                    #return render_template("citaU.html",dictUsuarios = diccionarioUsuarios, mensaje = "Cita registrada!!!")
             except:
                 if tipo=="cliente":
                     return render_template("citaC.html", mensaje = "Ha ocurrido un error, intente mas tarde o solicite asistencia.")
@@ -204,7 +235,10 @@ def crearAtencion():
             try:
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
-                return render_template("citaA.html",dictUsuarios = diccionarioUsuarios, mensaje = "Cita registrada!!!")
+                doc="A"+id
+                url="/pdf/"+doc
+                return redirect(url)
+                #return render_template("citaA.html",dictUsuarios = diccionarioUsuarios, mensaje = "Cita registrada!!!")
             except:
                 return render_template("citaA.html",dictUsuarios = diccionarioUsuarios, mensaje = "Ha ocurrido un error, intente mas tarde o solicite asistencia.")
 
@@ -223,6 +257,23 @@ def detalleCita(id):
             cliente = usuario[1]['nombreCompleto']
     return render_template("detalleCita.html", cita = cita, cliente = cliente, mensaje = "Cita")
 
+@app.route("/citarecibo/<id>")
+def citaRecibo(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccCita = funciones.lee_diccionario_citas("citas.csv")
+    cita = diccCita[id]
+    print(cita['idCliente'])
+    idcliente = cita['idCliente']
+    cliente = str
+    x=datetime.datetime.now()
+    fechaE= x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
+    for usuario in diccionarioUsuarios.items():
+        if usuario[1]['id'] == idcliente:
+            cliente = usuario[1]['nombreCompleto']
+    return render_template("recibo.html", cita = cita, cliente = cliente, mensaje = "Cita", fechaE = fechaE)
+
 @app.route("/atencion/<id>")
 def detalleAtencion(id):
     global logeado
@@ -238,6 +289,24 @@ def detalleAtencion(id):
             cliente = usuario[1]['nombreCompleto']
     return render_template("detalleCita.html", cita = cita, cliente = cliente, mensaje = "Atención")
 
+@app.route("/atencionrecibo/<id>")
+def atencionRecibo(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccCita = funciones.lee_diccionario_citas("citas.csv")
+    cita = diccCita[id]
+    print(cita['idCliente'])
+    idcliente = cita['idCliente']
+    cliente = str
+    x=datetime.datetime.now()
+    fechaE= x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
+    for usuario in diccionarioUsuarios.items():
+        if usuario[1]['id'] == idcliente:
+            cliente = usuario[1]['nombreCompleto']
+    mensaje = "Atención"
+    return render_template("recibo.html", cita = cita, cliente = cliente, mensaje=mensaje, fechaE = fechaE)
+
 @app.route("/receta/<id>")
 def detalleReceta(id):
     global logeado
@@ -246,6 +315,30 @@ def detalleReceta(id):
     diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
     receta = diccRecetas[id]
     return render_template("detalleReceta.html",receta = receta)
+@app.route("/recetarecibo/<id>")
+def reciboReceta(id):
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
+    diccCita = funciones.lee_diccionario_citas("citas.csv")
+    diccionarioUsuarios = funciones.lee_diccionario_usuariosID('usuarios.csv')
+    diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
+    cita = diccCita[diccRecetas[id]['id_cita']]
+    medicamentos = diccRecetas[id]['medicamentosRecetados']
+    medicamentos = medicamentos.replace("☺",",")
+    indicaciones = diccRecetas[id]['detalles']
+    indicaciones = indicaciones.replace("☺",",")
+    idcliente= cita['idCliente']
+    cliente = diccionarioUsuarios[idcliente]
+    nombreCliente = cliente['nombreCompleto']
+    receta = diccRecetas[id]
+    mascota = cita['nombreMascota']
+    servicio = diccionarioServicios[id]
+    subTotal = servicio['subTotal']
+    iva = (float(subTotal)*0.16)
+    total = float(subTotal)+float(iva)
+    return render_template("receta.html",receta = receta, nombre = nombreCliente, mascota = mascota, medicamentos = medicamentos, indicaciones = indicaciones, subTotal = subTotal, iva = iva, total = total)
 
 @app.route("/detalle/<id>")
 def detalleReceta2(id):
@@ -336,6 +429,8 @@ def agregarReceta():
             medicamentosRecetados=medicamentosRecetados.replace(",","☺")
             print(medicamentosRecetados)
             detalles=request.form['detalles']
+            detalles=detalles.replace("\"","")
+            detalles=detalles.replace(",","☺")
             fecha=request.form['fecha']
             subTotal=request.form['subTotal']
             receta = [id,id_cita,medicamentosRecetados,detalles,fecha]
@@ -343,7 +438,9 @@ def agregarReceta():
             try:
                 funciones.escribir_archivo("servicios.csv",servicio)
                 funciones.escribir_archivo("recetas.csv",receta)
-                return render_template("agregarReceta.html",dictCitas=diccionarioCitas, mensaje="Receta registrada con exito!!!")
+                #return render_template("agregarReceta.html",dictCitas=diccionarioCitas, mensaje="Receta registrada con exito!!!")
+                url = "/pdf/R"+id
+                return redirect(url)
             except:
                 return render_template("agregarReceta.html",dictCitas=diccionarioCitas, mensaje="Ha ocurrido un error, intente mas tarde o solicite asistencia.")
 
@@ -426,6 +523,52 @@ def historialAtencionCliente(id):
 @app.route("/acceso_restringido")
 def accesoRestringido():
     return render_template("sinpermiso.html",log = logeado)
+
+@app.route("/ventas_diarias", methods=['GET','POST'])
+def ventasDiarias():
+    if request.method=="GET":
+        return render_template("formInformeDia.html")
+    else:
+        if request.method=="POST":
+            try:
+                diccionarioServicios=funciones.lee_diccionario_servicios("servicios.csv")
+                diccServicio = {}
+                diccIVA = {}
+                diccTotal = {}
+                totalNeto=0
+                for servicio in diccionarioServicios:
+                    if diccionarioServicios[servicio]['fecha']==request.form['fecha']:
+                        print(diccionarioServicios[servicio])
+                        diccServicio[servicio]=diccionarioServicios[servicio]
+                        diccIVA[servicio]=float(diccionarioServicios[servicio]['subTotal'])*0.16
+                        diccTotal[servicio]=float(diccionarioServicios[servicio]['subTotal'])+float(diccIVA[servicio])
+                        totalNeto+=diccTotal[servicio]
+                        print(diccServicio[servicio])
+                return render_template("informeDia.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal, totalNeto=totalNeto, fecha = request.form['fecha'])
+            except:
+                return render_template("formInformeDia.html", mensaje = "Error.")
+
+@app.route("/pdf/<documento>", methods=['GET'])
+def imprimir(documento):
+    diccDocumentos={
+        'r':'recibo_cita',
+        'a':'recibo_atencion',
+        'R':'receta',
+        'i':'informe_diario',
+        'I':'informe_mensual'
+    }
+    tipoDocumento= documento[0]
+    docID=documento[1:]
+    if tipoDocumento=='r':
+        url="/citarecibo/"+docID
+    if tipoDocumento=='R':
+        url="/recetarecibo/"+docID
+    if tipoDocumento=='A':
+        url="/atencionrecibo/"+docID
+    if request.method=="GET":
+        return render_pdf(url)
+        pass
+
 
 if __name__ == "__main__":
     logeado = False

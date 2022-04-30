@@ -16,4 +16,7 @@
 <p><strong>Detalles: </strong> {{receta['detalles']}}</p>
 <p><strong>Fecha: </strong> {{receta['fecha']}}</p>
 <p><strong>Sub Total: </strong> {{receta['subTotal']}}</p>
+<br>
+<a href="/pdf/R{{receta['id_receta']}}">Imprimir Recibo</a>
+<br>
 {% endblock %}

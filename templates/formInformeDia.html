@@ -1,0 +1,18 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Generar informe de ventas diarias
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h1>Agregar Receta:</h1>
+<h2>{{mensaje}}</h2>
+<form action="" method="POST">
+    <label for="fecha"> Selecciona una fecha para realizar el reporte de ese dia: </label>
+    <input id="fecha" name="fecha" type="date" required><br>
+    <input type="submit" name="enviar" value="Enviar">
+</form>
+{% endblock %}

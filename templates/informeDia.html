@@ -1,0 +1,42 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Informe del dia {{fecha}}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<h2>Servicios realizados el dia {{fecha}}:</h2>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+        <tr>
+            <td style="width: 20%;">Atencion:</td>
+            <td style="width: 20%;">Tipo:</td>
+            <td style="width: 20%;">Sub total:</td>
+            <td style="width: 20%;">IVA:</td>
+            <td style="width: 20%;">Total:</td>
+        </tr>
+        {%for servicio in diccServicio%}
+        <tr>
+            <td>{{diccServicio[servicio]['numero']}}</td>
+            <td>{{diccServicio[servicio]['tipo']}}</td>
+            <td>{{diccServicio[servicio]['subTotal']}}</td>
+            <td>{{diccIVA[servicio]}}</td>
+            <td>{{diccTotal[servicio]}}</td>
+        </tr>
+        {%endfor%}
+        <tr>
+            <td colspan="3" rowspan="1"></td>
+            <td>Total neto:</td>
+            <td>{{totalNeto}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+<a href="/pdf/i{{fecha}}">Imprimir informe.</a>
+<br>
+<br>
+{% endblock %}
