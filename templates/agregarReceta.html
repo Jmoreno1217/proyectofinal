@@ -8,14 +8,15 @@
 <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
-<h1>Agregar Receta:</h1>
-<h2>{{mensaje}}</h2>
-<form action="" method="POST">
+<center><h1>Agregar Receta:</h1>
+<h2>{{mensaje}}</h2></center>
+<section>
+<form action="" method="POST" class="form">
     <label for="id_cita"> ID de la cita: </label>
     <input id="id_cita" name="id_cita" list="lista_citas" required><br>
     <label for="medicamento"> Seleccione el medicamento a agregar: </label>
     <input id="medicamentos"list="lista_medicamentos">  
-    <input name="agregar" type="button" id="agregar" value="Agregar Medicamento" onclick="agregarMedicamento()"><br>
+    <input name="agregar" type="button" id="agregar" value="Agregar Medicamento" onclick="agregarMedicamento()" class="button"><br>
     <label for="medicamentosRecetados"> Medicamento(s) recetado(s): </label>
     <textarea id="medicamentosRecetados" name="medicamentosRecetados" required readonly></textarea><br>
     <label for="detalles"> Detalles: </label>
@@ -24,7 +25,7 @@
     <input id="subTotal" name="subTotal" readonly value="0"><br>
     <label for="fecha"> Fecha: </label>
     <input id="fecha" type="date" name="fecha" required><br>
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
     <script>
         function agregarMedicamento(){
             var texto = document.getElementById("medicamentos").value;
@@ -37,6 +38,7 @@
         }
     </script>
 </form>
+</section>
 <datalist id="lista_citas">
     {%for cita in dictCitas%}
         <option value="{{dictCitas[cita]['id']}}"></option>

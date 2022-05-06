@@ -8,7 +8,7 @@
 <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
-<h2>Servicios realizados el dia {{fecha}}:</h2>
+<h2>Servicios realizados el mes {{mes}} del año {{anio}}:</h2>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
     <tbody>
         <tr>
@@ -38,7 +38,7 @@
 </table>
 <br>
 <br>
-<a href="/pdf/i{{fecha}}">Imprimir informe.</a>
+<a href="/pdf/I{{anioMes}}">Imprimir informe.</a>
 <br>
 <br>
 {% endblock %}

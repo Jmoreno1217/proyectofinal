@@ -1,0 +1,40 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Generar informe de ventas diarias
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% endblock %}
+{% block body %}
+<center>
+<h1>Agregar Receta:</h1>
+<h2>{{mensaje}}</h2>
+</center>
+<section>
+<form action="" method="POST" class="form">
+    <label for="mes"> Selecciona un mes para realizar el reporte sobre ese mes: </label>
+    <input id="mes" name="mes" list="meses" required><br>
+    <label for="anio"> Ingresa un año para realizar el reporte sobre ese mes: </label>
+    <input id="anio" name="anio" required><br>
+    <input type="submit" name="enviar" value="Enviar" class="button">
+</form>
+</section>
+
+<datalist id="meses">
+<option value="Enero"></option>
+<option value="Febrero"></option>
+<option value="Marzo"></option>
+<option value="Abril"></option>
+<option value="Mayo"></option>
+<option value="Junio"></option>
+<option value="Julio"></option>
+<option value="Agosto"></option>
+<option value="Septiembre"></option>
+<option value="Octubre"></option>
+<option value="Noviembre"></option>
+<option value="Diciembre"></option>
+</datalist>
+
+{% endblock %}

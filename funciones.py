@@ -1,6 +1,7 @@
 from asyncore import write
 import csv
 from operator import contains
+from xml.dom.expatbuilder import Namespaces
 from passlib.hash import sha256_crypt
 import datetime
 
@@ -99,23 +100,72 @@ class funciones:
         except IOError:
             print(f"No se pudo abrir el archivo {archivo}")
     
-    def cambiaContrasena(user:str, passw:str,archivo:str):
-        dict1 = dict
-        with open(archivo,'r') as fh1:
-            dict1= {rows[0]:rows[1] for rows in fh1}
-        with open(archivo,'w') as fh:
-            for usuario in dict1:
-                if dict1[usuario]['usuario'] == user:
-                    dict1[usuario]['password'] = passw
-            fh.write(dict1)
-        return 1
+    def cambiaContrasena(usuario:dict, nPass:str,archivo:str):
+        diccionario = {}
+        try:
+            with open(archivo,"r",encoding="utf-8") as fh: #fh: file handle
+                csv_reader = csv.DictReader(fh)
+                for renglon in csv_reader:
+                    llave = renglon['usuario']
+                    diccionario[llave] = renglon
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        columnas = ['id','usuario','nombreCompleto','password','correo','tipo']
+        diccionario[usuario['usuario']]['password']=nPass
+        try:
+            with open(archivo,"w",encoding="utf-8") as file:
+                writer = csv.DictWriter(file,fieldnames=columnas)
+                writer.writeheader()
+                for user in diccionario:
+                    #print(diccionario[user])
+                    writer.writerow(diccionario[user])
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        pass
+    
+    def modificarUsuario(archivo:str,usuario:dict):
+        diccionario = {}
+        try:
+            with open(archivo,"r",encoding="utf-8") as fh: #fh: file handle
+                csv_reader = csv.DictReader(fh)
+                for renglon in csv_reader:
+                    llave = renglon['id']
+                    diccionario[llave] = renglon
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        columnas = ['id','usuario','nombreCompleto','password','correo','tipo']
+        diccionario[usuario['id']]=usuario
+        try:
+            with open(archivo,"w",encoding="utf-8") as file:
+                writer = csv.DictWriter(file,fieldnames=columnas)
+                writer.writeheader()
+                for user in diccionario:
+                    #print(diccionario[user])
+                    writer.writerow(diccionario[user])
+        except IOError:
+            print(f"No se pudo abrir el archivo {archivo}")
+        pass
 
-    def generar_id(dictServicio:dict)->str:
+    def generar_id(dicc:dict)->str:
         x=datetime.datetime.now()
         id = x.strftime("%y")+x.strftime("%m") + x.strftime("%d")+"000"
         n=0
-        for numero, tipo in dictServicio.items():
+        for numero in dicc.items():
             temp = numero[0:len(id)-3]
+            temp2=id[0:len(id)-3]
+            if temp == temp2:
+                n+=1
+        n+=1
+        n = str(n)
+        id2= id[0:len(id)-len(n)]+n
+        return(id2)
+    
+    def generar_id_usuario(dicc:dict)->str:
+        x=datetime.datetime.now()
+        id = x.strftime("%y")+x.strftime("%m") + x.strftime("%d")+"000"
+        n=0
+        for usuario in dicc:
+            temp = dicc[usuario]['id'][0:len(id)-3]
             temp2=id[0:len(id)-3]
             if temp == temp2:
                 n+=1

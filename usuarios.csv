@@ -1,7 +1,8 @@
 id,usuario,nombreCompleto,password,correo,tipo
 
-1,ejemplo,ejemplo,1234,1234@nose.com,administrador
+220505001,Admin,Admin,Admin,correo@ejemplo.com,administrador
 
-2,ejemplo2,ejemplo2,1234,12344@nose.com,usuario
+220505002,ejemploUsuario,Usuario de ejemplo,ejemploU,correo2@ejemplo.com,usuario
 
-3,ejemplo3,ejemplo3,1234,12345@nose.com,cliente
+220505003,ejemploCliente,Cliente de ejemplo,ejemploC,correo3@ejemplo.com,cliente
+

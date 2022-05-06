@@ -8,9 +8,10 @@
     <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
-<h1>Ingrese los datos para su proxima cita:</h1>
+<center><h1>Ingrese los datos para su próxima cita:</h1></center>
 <h2>{{mensaje}}</h2>
-<form action="" method="POST">
+<section>
+<form action="" method="POST" class="form">
     <label for="fecha"> Fecha: </label>
     <input type="date" id="fecha" name="fecha" required><br>
     <label for="hora_cita"> Elija la hora de su cita: </label>
@@ -21,8 +22,9 @@
     <input id="tipo" name="tipo" list="lista_tipo" required><br>
     <label for="atencion"> Atención a solicitar: </label>
     <input id="atencion" name="atencion" list="lista_atencion" required><br>
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
 </form>
+</section>
 <datalist id="lista_citas">
     <option value="08:00"></option>
     <option value="08:30"></option>

@@ -8,12 +8,14 @@
 <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
-<h1>Seleccione el usuario a buscar:</h1>
-<form action="" method="POST">
+<center><h1>Seleccione el usuario a buscar:</h1></center>
+<section>
+<form action="" method="POST" class="form">
     <label for="id_cliente"> Cliente: </label>
     <input id="id_cliente" name="id_cliente" list="lista_clientes" required><br>
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
 </form>
+</section>
 <datalist id="lista_clientes">
     {%for cliente in dictClientes%}
         {%if dictClientes[cliente]['tipo']=='cliente'%}

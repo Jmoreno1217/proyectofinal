@@ -9,9 +9,10 @@
 <a href="/medicamentos">Atras.</a>
 {% endblock %}
 {% block body %}
-<h1>Agregar Medicina:</h1>
-<h2>{{mensaje}}</h2>
-<form action="" method="POST">
+<center><h1>Agregar Medicina:</h1>
+<h2>{{mensaje}}</h2></center>
+<section>
+<form action="" method="POST" class="form">
     <label for="codigo"> Código: </label>
     <input type="codigo" id="codigo" name="codigo" required><br>
     
@@ -33,8 +34,9 @@
     <label for="precio"> Precio: </label>
     <input id="precio" name="precio" required><br>
 
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
 </form>
+</section>
 <datalist id="lista_administracion">
     <option value="Oral"></option>
     <option value="Inyectable"></option>

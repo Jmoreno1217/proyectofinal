@@ -1,0 +1,33 @@
+{%  extends "base.html"  %}
+{% block title %}Veterinaria Pet Lovers® - Agregar Receta
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<a href="/">Pagina de Inicio.</a>
+{% if admin==1 %}
+<a href="/usuarios">Atras.</a>
+{% endif %}
+{% endblock %}
+{% block body %}
+<center><h1>Modificar Usuario:</h1>
+<h2>{{mensaje}}</h2></center>
+<section>
+<form action="" method="POST" class="form">
+    <label for="user">Nombre de usuario:</label>
+    <input id="user" name="user" value="{{usuario['usuario']}}" required><br>
+    <label for="nombreCompleto">Nombre completo:</label>
+    <input id="nombreCompleto" name="nombreCompleto" value="{{usuario['nombreCompleto']}}" required><br>
+    <label for="correo">Correo:</label>
+    <input id="correo" name="correo" value="{{usuario['correo']}}" required><br>
+    <label for="tipo">Tipo:</label>
+    <input id="tipo" name="tipo" list="lista_tipo" value="{{usuario['tipo']}}" required><br>
+    <input class="button" type="submit" value="Modificar">
+</form>
+</section>
+<datalist id="lista_tipo">
+    <option value="Usuario"></option>
+    <option value="Cliente"></option>
+</datalist>
+{% endblock %}

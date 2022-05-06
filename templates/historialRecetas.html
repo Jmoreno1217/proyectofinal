@@ -9,6 +9,7 @@
 {% endblock %}
 {% block body %}
 <h2>Historial de Recetas:</h2>
+<h3>{{mensaje}}</h3>
 <ul>
     {% for receta in diccrecetas %}
     <li><a href="/receta/{{diccrecetas[receta]['id_receta']}}" class="liga">{{diccrecetas[receta]['id_receta']}}</a>. Fecha: {{diccrecetas[receta]['fecha']}}.</li>

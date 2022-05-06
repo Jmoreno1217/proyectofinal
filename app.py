@@ -1,3 +1,15 @@
+'''
+    Equipo:
+        -Alvarez Portillo, Lilian Yeitnaletzi.
+        -Badachi Benitez, Yubitza Adamaris.
+        -Moreno Laines, Juan Pedro.
+    Materia: Desarollo de Sistemas 4.
+    Fecha de entrega: 06 de Mayo de 2022.
+    Creditos:
+        -Diseño de formularios: https://codepen.io/
+        -Diseño de la pantilla base: AlexCG Design (https://www.youtube.com/channel/UCm0q786c9bW9FiQvesV126A)
+'''
+from ast import Pass
 from asyncio.windows_events import NULL
 from flask import Flask, render_template, request, session, redirect, url_for
 from funciones import funciones
@@ -14,9 +26,9 @@ usuarioActivo=NULL
 diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
 diccionarioServicios = funciones.lee_diccionario_servicios('servicios.csv')
 diccionarioMedicamentos = funciones.lee_diccionario_medicamentos('medicamentos.csv')
-diccCliente = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion'}
-diccUsuario = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion','Agregar una receta':'/agregar_receta', 'Agregar una atención':'/agregar_atencion'}
-diccAdmin = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas',
+diccIndexCliente = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion'}
+diccIndexUsuario = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas','Historial de atención':'/historial_atencion','Agregar una receta':'/agregar_receta', 'Agregar una atención':'/agregar_atencion'}
+diccIndexAdmin = {'Agendar cita':'/agendar_cita','Historial de recetas':'/historial_recetas',
                 'Historial de atención':'/historial_atencion','Agregar una receta':'/agregar_receta', 'Agregar una atención':
                 '/agregar_atencion','Usuarios':'/usuarios','Medicamentos':'/medicamentos','Servicios':'/servicios','Informe de ventas diarias':'/ventas_diarias','Informe de ventas mensuales':'/ventas_mensuales'}
 
@@ -27,21 +39,22 @@ def index():
     global tipo
     global usuarioActivo
     if logeado==False:
-        return render_template("index.html",log = logeado,tipo = diccCliente)
+        return render_template("index.html",log = logeado,tipo = diccIndexCliente)
     elif usuarioActivo.tipo == 'cliente':
-        return render_template("index.html",log = logeado,tipo = diccCliente)
+        return render_template("index.html",log = logeado,tipo = diccIndexCliente)
     elif usuarioActivo.tipo=='usuario':
-        return render_template("index.html",log = logeado,tipo = diccUsuario)
+        return render_template("index.html",log = logeado,tipo = diccIndexUsuario)
     elif usuarioActivo.tipo=='administrador':
-        return render_template("index.html",log = logeado,tipo = diccAdmin)
+        return render_template("index.html",log = logeado,tipo = diccIndexAdmin)
     else:
-        return render_template("index.html",log = logeado,tipo = diccCliente)
+        return render_template("index.html",log = logeado,tipo = diccIndexCliente)
 
 @app.route("/login", methods=['GET','POST'])
 def login():
     global logeado
     global tipo
     global usuarioActivo
+    diccionarioUsuarios=funciones.lee_diccionario_usuarios("usuarios.csv")
     if request.method == 'GET':
         return render_template("login.html")
     else:
@@ -88,23 +101,22 @@ def passMod():
     if request.method == 'GET':
         return render_template("passMod.html")
     else:
-        try:
-            if request.method == 'POST':
-                usuario = request.form['username']
-                password = request.form['password']
-                if usuario in diccionarioUsuarios:
+        if request.method=='POST':
+            diccionarioUsuarios=funciones.lee_diccionario_usuarios("usuarios.csv")
+            try:
+                if request.method == 'POST':
                     usuario = request.form['username']
-                    password= request.form['password']
-                    npassword = request.form['npassword']
-                    if usuario in diccionarioUsuarios:
-                        diccionarioUsuarios[usuario]['password'] = sha256_crypt.hash(npassword)
-                        n = funciones.cambiaContrasena('usuario',npassword,"usuarios.csv")
-                        return render_template('passMod',usuario=usuario,mensaje='Password cambiado')
+                    password = request.form['password']
+                    npass = request.form['npassword']
+                    if usuario in diccionarioUsuarios and diccionarioUsuarios[usuario]['password']==password:
+                        user = diccionarioUsuarios[usuario]
+                        funciones.cambiaContrasena(user, npass, "usuarios.csv")
+                        return redirect("/login")
                     else:
-                        return render_template('passMod',usuario=usuario,mensaje='Las contraseñas no son las mismas, intente de nuevo.')
-        except:
-                msg = f'No esta registrado el usuario ingresado.'
-                return render_template("passMod.html",mensaje=msg)
+                        return render_template('passMod',usuario=usuario,mensaje='Las credenciales no coinciden con ninguna almacenada, intente de nuevo.')
+            except:
+                    msg = f'No esta registrado el usuario ingresado.'
+                    return render_template("passMod.html",mensaje=msg)
     
 
 @app.route("/logout", methods=['GET'])
@@ -127,6 +139,34 @@ def listaUsuarios():
     diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
     return render_template("usuarios.html", diccUsuarios = diccionarioUsuarios)
 
+@app.route("/agregar_usuario", methods=['GET','POST'])
+def agregarUsuarioAdmin():
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
+    if request.method=="GET":
+        return render_template("agregarUsuario.html",admin = 1)
+        pass
+    else:
+        if request.method=="POST":
+            try:
+                id = funciones.generar_id_usuario(diccionarioUsuarios)
+                user = request.form['user']
+                nombreCompleto = request.form['nombreCompleto']
+                password = request.form['password']
+                correo = request.form['correo']
+                tipo2= request.form['tipo']
+                tipo2= tipo2.lower()
+                temp = [id,user,nombreCompleto,password,correo,tipo2]
+                funciones.escribir_archivo("usuarios.csv",temp)
+                return render_template("agregarUsuario.html",admin = 1, mensaje="Usuario agregado con exito!!!")
+            except:
+                return render_template("agregarUsuario.html",admin = 1, mensaje="Ha ocurrido un error, intente mas tarde o solicite asistencia.")
+
 @app.route("/usuariova/<usuario>")
 def vistaUsuarioAdmin(usuario):    
     global tipo
@@ -135,6 +175,7 @@ def vistaUsuarioAdmin(usuario):
         return redirect("/login")
     if tipo != "administrador":
         return redirect("/acceso_restringido")
+    diccionarioUsuarios = funciones.lee_diccionario_usuarios('usuarios.csv')
     print(usuario)
     print(diccionarioUsuarios[usuario])
     return render_template("usuariova.html",usuario = diccionarioUsuarios[usuario])
@@ -185,7 +226,7 @@ def crearCita():
                 fecha = request.form['fecha']
                 hora_cita = request.form['hora_cita']
                 temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
-                temp2 =[id, "cita"]
+                temp2 =[id, "cita", fecha, "50"]
             try:
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
@@ -231,7 +272,7 @@ def crearAtencion():
             fecha = x.strftime("%Y") + "-" + x.strftime("%m")+"-"+x.strftime("%d")
             hora_cita = x.strftime("%H")+":"+x.strftime("%M")
             temp =[id, idCliente,nombre_paciente,tipo2,servicio,fecha,hora_cita]
-            temp2 =[id, "atencion","0"]
+            temp2 =[id, "atencion",fecha,"50"]
             try:
                 funciones.escribir_archivo("servicios.csv",temp2)
                 funciones.escribir_archivo("citas.csv",temp)
@@ -315,11 +356,12 @@ def detalleReceta(id):
     diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
     receta = diccRecetas[id]
     return render_template("detalleReceta.html",receta = receta)
+
 @app.route("/recetarecibo/<id>")
 def reciboReceta(id):
     global logeado
-    if logeado==False:
-        return redirect("/login")
+    #if logeado==False:
+     #   return redirect("/login")
     diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
     diccCita = funciones.lee_diccionario_citas("citas.csv")
     diccionarioUsuarios = funciones.lee_diccionario_usuariosID('usuarios.csv')
@@ -335,7 +377,7 @@ def reciboReceta(id):
     receta = diccRecetas[id]
     mascota = cita['nombreMascota']
     servicio = diccionarioServicios[id]
-    subTotal = servicio['subTotal']
+    subTotal = str(servicio['subTotal'])
     iva = (float(subTotal)*0.16)
     total = float(subTotal)+float(iva)
     return render_template("receta.html",receta = receta, nombre = nombreCliente, mascota = mascota, medicamentos = medicamentos, indicaciones = indicaciones, subTotal = subTotal, iva = iva, total = total)
@@ -434,7 +476,7 @@ def agregarReceta():
             fecha=request.form['fecha']
             subTotal=request.form['subTotal']
             receta = [id,id_cita,medicamentosRecetados,detalles,fecha]
-            servicio = [id,"receta",subTotal]
+            servicio = [id,"receta",fecha,subTotal]
             try:
                 funciones.escribir_archivo("servicios.csv",servicio)
                 funciones.escribir_archivo("recetas.csv",receta)
@@ -476,11 +518,17 @@ def historialRecetasCliente(id):
     diccrecetas = {}
     diccRecetas=funciones.lee_diccionario_recetas("recetas.csv")
     diccCitas = funciones.lee_diccionario_citas("citas.csv")
-    for receta in diccRecetas:
-        for cita in diccCitas:
-            if diccRecetas[receta]['id_cita']==diccCitas[cita]['id'] and diccCitas[cita]['idCliente']==id:
-                diccrecetas[diccRecetas[receta]['id_receta']]=diccRecetas[receta]
-    return render_template("historialRecetas.html",diccrecetas=diccRecetas)
+    try:
+        for receta in diccRecetas:
+            for cita in diccCitas:
+                if diccRecetas[receta]['id_cita']==diccCitas[cita]['id'] and diccCitas[cita]['idCliente']==id:
+                    diccrecetas[diccRecetas[receta]['id_receta']]=diccRecetas[receta]
+        if len(diccrecetas)==0:
+            return render_template("historialRecetas.html", mensaje="El usuario no tiene ninguna receta registrada.")    
+        return render_template("historialRecetas.html",diccrecetas=diccrecetas)
+    except:
+        return render_template("historialRecetas.html", mensaje="Ha ocurrido un error, intentelo mas tarde o solicite asistencia.")
+    
 
 
 @app.route("/historial_atencion")
@@ -502,7 +550,7 @@ def buscarAtencionUsuario():
         return redirect(url)
     if request.method == "GET":
         dictUsuarios = funciones.lee_diccionario_usuarios("usuarios.csv")
-        return render_template("historialRecetasGenerico.html", dictClientes=dictUsuarios)
+        return render_template("historialAtencionGenerico.html", dictClientes=dictUsuarios)
     else:
         if request.method == "POST":
             url = "/historial_atencion/"+request.form['id_cliente']
@@ -515,10 +563,17 @@ def historialAtencionCliente(id):
     diccatencion = {}
     diccCitas = funciones.lee_diccionario_citas("citas.csv")
     diccservicios=funciones.lee_diccionario_servicios("servicios.csv")
-    for cita in diccCitas:
-        if diccCitas[cita]['idCliente']==id:
-            diccatencion[diccCitas[cita]['id']]=diccCitas[cita]
-    return render_template("historialAtencion.html",servicios=diccservicios,diccCitas=diccCitas)
+    try:
+        for cita in diccCitas:
+            if diccCitas[cita]['idCliente']==id:
+                print(id)
+                print(diccCitas[cita]['idCliente'])
+                diccatencion[diccCitas[cita]['id']]=diccCitas[cita]
+        if len(diccatencion)==0:
+            return render_template("historialAtencion.html",mensaje="El usuario no tiene ninguna cita o atencion registrada.")    
+        return render_template("historialAtencion.html",servicios=diccservicios,diccCitas=diccatencion)
+    except:
+        return render_template("historialAtencion.html",mensaje="Ha ocurrido un error, intentelo mas tarde o solicite asistencia.")
 
 @app.route("/acceso_restringido")
 def accesoRestringido():
@@ -526,6 +581,12 @@ def accesoRestringido():
 
 @app.route("/ventas_diarias", methods=['GET','POST'])
 def ventasDiarias():
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
     if request.method=="GET":
         return render_template("formInformeDia.html")
     else:
@@ -535,6 +596,8 @@ def ventasDiarias():
                 diccServicio = {}
                 diccIVA = {}
                 diccTotal = {}
+                subTotal2=0
+                iva2=0
                 totalNeto=0
                 for servicio in diccionarioServicios:
                     if diccionarioServicios[servicio]['fecha']==request.form['fecha']:
@@ -542,11 +605,176 @@ def ventasDiarias():
                         diccServicio[servicio]=diccionarioServicios[servicio]
                         diccIVA[servicio]=float(diccionarioServicios[servicio]['subTotal'])*0.16
                         diccTotal[servicio]=float(diccionarioServicios[servicio]['subTotal'])+float(diccIVA[servicio])
+                        subTotal2+=float(diccionarioServicios[servicio]['subTotal'])
+                        iva2+=diccIVA[servicio]
                         totalNeto+=diccTotal[servicio]
                         print(diccServicio[servicio])
-                return render_template("informeDia.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal, totalNeto=totalNeto, fecha = request.form['fecha'])
+                return render_template("informeDia.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal,subTotal2 = subTotal2, IVA2=iva2, totalNeto=totalNeto, fecha = request.form['fecha'])
             except:
                 return render_template("formInformeDia.html", mensaje = "Error.")
+
+@app.route("/informe_diario/<id>")
+def informe_diario(id):
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    try:
+        diccionarioServicios=funciones.lee_diccionario_servicios("servicios.csv")
+        diccServicio = {}
+        diccIVA = {}
+        diccTotal = {}
+        subTotal2=0
+        iva2=0
+        totalNeto=0
+        for servicio in diccionarioServicios:
+            if diccionarioServicios[servicio]['fecha']==id:
+                print(diccionarioServicios[servicio])
+                diccServicio[servicio]=diccionarioServicios[servicio]
+                diccIVA[servicio]=float(diccionarioServicios[servicio]['subTotal'])*0.16
+                diccTotal[servicio]=float(diccionarioServicios[servicio]['subTotal'])+float(diccIVA[servicio])
+                subTotal2+=float(diccionarioServicios[servicio]['subTotal'])
+                iva2+=diccIVA[servicio]
+                totalNeto+=diccTotal[servicio]
+                print(diccServicio[servicio])
+                x = datetime.datetime.now()
+                fecha2 = x.strftime("%A")+", "+  x.strftime("%d")+" de "+x.strftime("%B") + " del " + x.strftime("%y")+"."
+        return render_template("informeDiaI.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal,subTotal2 = subTotal2, IVA2=iva2, totalNeto=totalNeto, fecha = id, fecha2 = fecha2)
+    except:
+        return render_template("formInformeDia.html", mensaje = "Error.")
+
+@app.route("/ventas_mensuales", methods=['GET','POST'])
+def ventasMensuales():
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    if request.method == "GET":
+        return render_template("formInformeMes.html")
+    else:
+        if request.method == "POST":
+            x = datetime.datetime.now()
+            fecha = x.strftime("%d")+"-"+x.strftime("%M")+"-"+x.strftime("%Y")
+            anioC = x.strftime("%Y")
+            if int(request.form['anio']) < 2022 or int(request.form['anio']) > int(anioC):
+                return render_template("formInformeMes.html", mensaje = "El año ingresado no esta dentro del periodo que lleva en servicio la veternaria, ingrese un valor valido.")
+            if request.form['mes'] == "Enero":
+                mes = "01"
+            elif request.form['mes'] == "Febrero":
+                mes = "02"
+            elif request.form['mes'] == "Marzo":
+                mes = "03"
+            elif request.form['mes'] == "Abril":
+                mes = "04"
+            elif request.form['mes'] == "Mayo":
+                mes = "05"
+            elif request.form['mes'] == "Junio":
+                mes = "06"
+            elif request.form['mes'] == "Julio":
+                mes = "07"
+            elif request.form['mes'] == "Agosto":
+                mes = "08"
+            elif request.form['mes'] == "Septiembre":
+                mes = "09"
+            elif request.form['mes'] == "Octubre":
+                mes = "10"
+            elif request.form['mes'] == "Noviembre":
+                mes = "11"
+            elif request.form['mes'] == "Diciembre":
+                mes = "12"
+            anio = request.form['anio']
+            anioMes = str(anio)+"-"+str(mes)
+            print(anioMes)
+            try:
+                diccionarioServicios=funciones.lee_diccionario_servicios("servicios.csv")
+                diccServicio = {}
+                diccIVA = {}
+                diccTotal = {}
+                subTotal2=0
+                iva2=0
+                totalNeto=0
+                for servicio in diccionarioServicios:
+                    print(diccionarioServicios[servicio]['fecha'][:7])
+                    if diccionarioServicios[servicio]['fecha'][:7]==anioMes:
+                        print(diccionarioServicios[servicio])
+                        diccServicio[servicio]=diccionarioServicios[servicio]
+                        diccIVA[servicio]=float(diccionarioServicios[servicio]['subTotal'])*0.16
+                        diccTotal[servicio]=float(diccionarioServicios[servicio]['subTotal'])+float(diccIVA[servicio])
+                        subTotal2+=float(diccionarioServicios[servicio]['subTotal'])
+                        iva2+=diccIVA[servicio]
+                        totalNeto+=diccTotal[servicio]
+                        print(diccServicio[servicio])
+                return render_template("informeMes.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal, subTotal2 = subTotal2, IVA2=iva2, totalNeto=totalNeto, anio = anio, mes = request.form['mes'] , anioMes=anioMes, fecha=fecha)
+            except:
+                return render_template("formInformeMes.html", mensaje = "Error.")
+        
+@app.route("/informe_mensual/<id>")
+def informe_mensual(id):
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    anioMes=id
+    anioC = anioMes[:4]
+    mes = anioMes[5:]
+    try:
+        diccionarioServicios=funciones.lee_diccionario_servicios("servicios.csv")
+        diccServicio = {}
+        diccIVA = {}
+        diccTotal = {}
+        subTotal2=0
+        iva2=0
+        totalNeto=0
+        for servicio in diccionarioServicios:
+            print(diccionarioServicios[servicio]['fecha'][:7])
+            if diccionarioServicios[servicio]['fecha'][:7]==anioMes:
+                print(diccionarioServicios[servicio])
+                diccServicio[servicio]=diccionarioServicios[servicio]
+                diccIVA[servicio]=float(diccionarioServicios[servicio]['subTotal'])*0.16
+                diccTotal[servicio]=float(diccionarioServicios[servicio]['subTotal'])+float(diccIVA[servicio])
+                subTotal2+=float(diccionarioServicios[servicio]['subTotal'])
+                iva2+=diccIVA[servicio]
+                totalNeto+=diccTotal[servicio]
+                print(diccServicio[servicio])
+        return render_template("informeMesI.html",diccServicio = diccServicio, diccIVA =diccIVA, diccTotal = diccTotal, subTotal2 = subTotal2, IVA2=iva2, totalNeto=totalNeto, anio = anioC, mes = mes)
+    except:
+        return render_template("formInformeMes.html", mensaje = "Error.")
+
+@app.route("/modificar_usuario/<user>", methods=['GET', 'POST'])
+def modificarUsuarioAdmin(user):
+    global tipo
+    global logeado
+    if logeado==False:
+        return redirect("/login")
+    if tipo != "administrador":
+        return redirect("/acceso_restringido")
+    dictUsuarios = funciones.lee_diccionario_usuariosID("usuarios.csv")
+    if request.method=="GET":
+        usuario = dictUsuarios[user]
+        return render_template("modUsuario.html",usuario = usuario)
+        pass
+    else:
+        if request.method=="POST":
+            try:
+                usuario = dictUsuarios[user]
+                usuario['usuario'] = request.form['user']
+                usuario['nombreCompleto'] = request.form['nombreCompleto']
+                usuario['password'] = usuario['password']
+                usuario['correo'] = request.form['correo']
+                usuario['tipo'] = request.form['tipo']
+                usuario['tipo'] = usuario['tipo'].lower()
+                funciones.modificarUsuario("usuarios.csv",usuario=usuario)
+                return render_template("modUsuario.html",usuario = usuario, mensaje="Usuario modificado con exito!!!")
+            except:
+                return render_template("modUsuario.html",usuario = usuario, mensaje="Ha ocurrido un error, intentelo de nuevo o solicite asistencia.")
+                pass
+            pass
 
 @app.route("/pdf/<documento>", methods=['GET'])
 def imprimir(documento):
@@ -565,6 +793,10 @@ def imprimir(documento):
         url="/recetarecibo/"+docID
     if tipoDocumento=='A':
         url="/atencionrecibo/"+docID
+    if tipoDocumento=='i':
+        url="/informe_diario/"+docID
+    if tipoDocumento=='I':
+        url="/informe_mensual/"+docID
     if request.method=="GET":
         return render_pdf(url)
         pass

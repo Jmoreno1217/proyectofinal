@@ -8,11 +8,15 @@
 <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
+<center>
 <h1>Agregar Receta:</h1>
 <h2>{{mensaje}}</h2>
-<form action="" method="POST">
+</center>
+<section></section>
+<form action="" method="POST" class="form">
     <label for="fecha"> Selecciona una fecha para realizar el reporte de ese dia: </label>
     <input id="fecha" name="fecha" type="date" required><br>
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
 </form>
+</section>
 {% endblock %}

@@ -8,9 +8,10 @@
     <a href="/">Pagina de Inicio.</a>
 {% endblock %}
 {% block body %}
-<h1>Ingrese los datos para su proxima cita:</h1>
+<center><h1>Ingrese los datos para su próxima cita:</h1></center>
 <h2>{{mensaje}}</h2>
-<form action="" method="POST">
+<section>
+<form action="" method="POST" class="form">
     <label for="nombre_paciente"> Nombre del paciente: </label>
     <input type="text" id="nombre_paciente" name="nombre_paciente" required><br>
     <label for="tipo"> Tipo de animal: </label>
@@ -19,8 +20,9 @@
     <input id="atencion" type="list" name="atencion" list="lista_atencion" required><br>
     <label for="cliente"> ID del cliente: </label>
     <input id="cliente" type="list" name="cliente" list="lista_clientes" required><br>
-    <input type="submit" name="enviar" value="Enviar">
+    <input type="submit" name="enviar" value="Enviar" class="button">
 </form>
+</section>
 <datalist id="lista_clientes">
     {%for usuario in dictUsuarios%}
         {%if dictUsuarios[usuario]['tipo']=='cliente'%}
